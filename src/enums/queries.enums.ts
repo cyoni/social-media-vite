@@ -1,0 +1,4 @@
+export enum QUERY_KEYS {
+  GET_RECENT_POSTS,
+  GET_CURRENT_USER,
+}

@@ -147,7 +147,7 @@ export async function createPost(form: INewPost) {
   const preview = await getFilePreview(uploadedFile.bucketId, uploadedFile.$id);
 
   if (!preview) {
-    await deleteFile(uploadedFile.bucketId, uploadedFile.$id)
+    await deleteFile(uploadedFile.bucketId, uploadedFile.$id);
     return false;
   }
 
@@ -163,9 +163,97 @@ export async function createPost(form: INewPost) {
   const uploadedPost = await uploadPost(post);
 
   if (!uploadedPost) {
-    await deleteFile(uploadedFile.bucketId, uploadedFile.$id)
+    await deleteFile(uploadedFile.bucketId, uploadedFile.$id);
     return false;
   }
 
   return true;
+}
+
+export async function getRecentPosts() {
+  const posts = await databases.listDocuments(
+    appwriteConfig.databaseId,
+    appwriteConfig.postCollectionId,
+    [Query.orderDesc("$createdAt"), Query.limit(20)]
+  );
+
+  return posts;
+}
+
+export async function likePost(postId: string, likes: string[]) {
+  const post = await databases.updateDocument(
+    appwriteConfig.databaseId,
+    appwriteConfig.postCollectionId,
+    postId,
+    { likes }
+  );
+
+  return post;
+}
+
+export async function savePost(userId: string, postId: string) {
+  try {
+    const updatedPost = await databases.createDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.savesCollectionId,
+      ID.unique(),
+      {
+        user: userId,
+        post: postId,
+      }
+    );
+
+    if (!updatedPost) throw Error;
+
+    return updatedPost;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getAccount() {
+  try {
+    const currentAccount = await account.get();
+
+    return currentAccount;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function deleteSavedPost(savedRecordId: string) {
+  try {
+    const statusCode = await databases.deleteDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.savesCollectionId,
+      savedRecordId
+    );
+
+    if (!statusCode) throw Error;
+
+    return { status: "Ok" };
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getCurrentUser() {
+  try {
+    const currentAccount = await getAccount();
+
+    if (!currentAccount) throw Error;
+
+    const currentUser = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      [Query.equal("accountId", currentAccount.$id)]
+    );
+
+    if (!currentUser) throw Error;
+
+    return currentUser.documents[0];
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
 }

@@ -56,3 +56,20 @@ export type IUploadPost = {
   tags: string[];
 };
 
+export interface IPost {
+  $collectionId: string;
+  $createdAt: string;
+  $databaseId: string;
+  $id: string;
+  $permissions: string[];
+  $tenant: string;
+  $updatedAt: string;
+  caption: string;
+  imageId: string;
+  imageUrl: string;
+  likes: string[];
+  location: string;
+  save: string[];
+  tags: string[];
+  users: string[];
+}
