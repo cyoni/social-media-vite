@@ -3,31 +3,26 @@ import { INewPost, INewUser, IUploadPost } from "../../types";
 import { account, appwriteConfig, avatars, databases, storage } from "./config";
 
 export async function createUserAccount(user: INewUser) {
-  try {
-    const newAccount = await account.create(
-      ID.unique(),
-      user.email,
-      user.password,
-      user.name
-    );
+  const newAccount = await account.create(
+    ID.unique(),
+    user.email,
+    user.password,
+    user.name
+  );
 
-    if (!newAccount) throw Error;
+  if (!newAccount) throw Error;
 
-    const avatarUrl = avatars.getInitials(user.name);
+  const avatarUrl = avatars.getInitials(user.name);
 
-    const newUser = await saveUserToDB({
-      accountId: newAccount.$id,
-      name: newAccount.name,
-      email: newAccount.email,
-      username: user.username,
-      imageUrl: avatarUrl,
-    });
+  const newUser = await saveUserToDB({
+    accountId: newAccount.$id,
+    name: newAccount.name,
+    email: newAccount.email,
+    username: user.username,
+    imageUrl: avatarUrl,
+  });
 
-    return newUser;
-  } catch (error) {
-    console.log(error);
-    return error;
-  }
+  return newUser;
 }
 
 export async function saveUserToDB(user: {
@@ -257,3 +252,29 @@ export async function getCurrentUser() {
     return null;
   }
 }
+
+export const getInfinitePosts = async ({
+  pageParam,
+}: {
+  pageParam: number;
+}) => {
+  const queries: any[] = [Query.orderDesc("$updatedAt"), Query.limit(3)];
+
+  if (pageParam) {
+    queries.push(Query.cursorAfter(pageParam.toString()));
+  }
+
+  try {
+    const posts = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postCollectionId,
+      queries
+    );
+
+    if (!posts) throw Error;
+
+    return posts;
+  } catch (error) {
+    console.log(error);
+  }
+};

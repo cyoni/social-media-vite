@@ -1,10 +1,9 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import TopBar from "../components/Layout/TopBar";
 import LeftSidebar from "../components/Layout/LeftSidebar";
 import BottomBar from "../components/Layout/BottomBar";
 
 function RootLayout() {
-  const isAuth = false;
   return (
     <div className="w-full flex flex-col sm:flex-row">
       <TopBar />

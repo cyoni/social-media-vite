@@ -19,7 +19,7 @@ import {
 
 function App() {
   return (
-    <main className="h-screen flex ">
+    <main className="min-h-screen h-full flex ">
       <Routes>
         <Route element={<AuthLayout />}>
           <Route path="/sign-in" element={<SignInForm />} />

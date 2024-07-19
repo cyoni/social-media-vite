@@ -18,6 +18,8 @@ import FileUploader from "./FileUploader";
 import { useCreatPost } from "../../react-query/queries";
 import { useEffect } from "react";
 import { useCurrentUser } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { toast } from "../ui/use-toast";
 
 function PostForm() {
   const {
@@ -27,7 +29,17 @@ function PostForm() {
     isPending: isSubmittingPost,
   } = useCreatPost();
 
-  useEffect(() => {}, [isSuccess, isError]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast({ title: "Your post is live" });
+
+      navigate("/");
+    } else if (isError) {
+      toast({ title: "Could not post at this time" });
+    }
+  }, [isSuccess, isError]);
 
   const { user } = useCurrentUser();
 
@@ -72,10 +84,7 @@ function PostForm() {
             <FormItem>
               <FormLabel className="shad-form_label">Add Photos</FormLabel>
               <FormControl>
-                <FileUploader
-                  fieldChange={field.onChange}
-                  //  mediaUrl={post?.imageUrl}
-                />
+                <FileUploader fieldChange={field.onChange} />
               </FormControl>
               <FormMessage className="shad-form_message" />
             </FormItem>
@@ -118,7 +127,13 @@ function PostForm() {
         />
 
         <div className="flex gap-2 justify-end">
-          <Button type="submit" className="bg-light-4 flex gap-2">
+          <Button
+            type="button"
+            onClick={() => {
+              navigate("/");
+            }}
+            className="bg-light-4 flex gap-2"
+          >
             <span>Cancel</span>
           </Button>
 

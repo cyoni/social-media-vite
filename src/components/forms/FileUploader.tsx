@@ -7,7 +7,6 @@ interface IProps {
 }
 
 function FileUploader({ fieldChange }: IProps) {
-  ///const [file, setFile] = useState<File[]>([]);
 
   const [fileUrl, setFileUrl] = useState<string>("");
 
@@ -16,7 +15,6 @@ function FileUploader({ fieldChange }: IProps) {
       "image/*": [],
     },
     onDrop: (acceptedFiles) => {
-      ///setFile(acceptedFiles);
       fieldChange(acceptedFiles);
       setFileUrl(URL.createObjectURL(acceptedFiles[0]));
     },

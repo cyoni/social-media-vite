@@ -17,6 +17,10 @@ module.exports = {
       },
     },
     extend: {
+      gridTemplateColumns: {
+        'auto-fill-100': 'repeat(auto-fill, minmax(100px, 1fr))',
+        'auto-fit-100': 'repeat(auto-fit, minmax(320px, 1fr))',
+      },
       colors: {
         'primary-500': '#877EFF',
         'primary-600': '#5D5FEF',

@@ -12,7 +12,7 @@ function AuthLayout() {
             <Outlet />
           </section>
 
-          <img src="/assets/images/side-img.svg" className="hidden md:block w-1/2 h-screen object-cover" />
+          <img src="/assets/images/auth-side.jpg" className="hidden md:block w-1/2 h-screen object-cover" />
         </div>
       )}
     </>

@@ -21,7 +21,17 @@ import { signupSchema } from "../../lib/validations";
 function SignUpForm() {
   const navigate = useNavigate();
 
-  const { mutateAsync: createUserAccount, isPending } = useSignUpAccount();
+  const {
+    mutateAsync: createUserAccount,
+    isPending,
+    isError,
+    error,
+    isSuccess,
+  } = useSignUpAccount();
+
+  console.log({ isError });
+  console.log({ isSuccess });
+  console.log({ error });
 
   const form = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
@@ -37,6 +47,7 @@ function SignUpForm() {
     let user;
     try {
       user = await createUserAccount(values);
+      console.log("user", user);
       navigate("/sign-in");
     } catch (err) {
       console.log(err);

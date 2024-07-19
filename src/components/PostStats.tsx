@@ -6,8 +6,12 @@ import {
   useSavePost,
 } from "../react-query/queries";
 import { Models } from "appwrite";
+import { useCurrentUser } from "../context/AuthContext";
 
-function PostStats({ post, userId }) {
+function PostStats({ post }) {
+  const { user } = useCurrentUser();
+  const { id: userId } = user;
+
   const { mutateAsync: likePost } = useLikePost();
   const { mutateAsync: savePost } = useSavePost();
   const { mutateAsync: deleteSavePost } = useDeleteSavePost();
@@ -43,7 +47,7 @@ function PostStats({ post, userId }) {
     e.stopPropagation();
 
     if (saveDoc) {
-      deleteSavePost({saveId: saveDoc.$id});
+      deleteSavePost({ saveId: saveDoc.$id });
     } else {
       savePost({ userId, postId: post.$id });
     }
@@ -64,7 +68,7 @@ function PostStats({ post, userId }) {
           onClick={handleLikePost}
           className="cursor-pointer"
         />
-        <p className="text-sm">5</p>
+        <p className="text-sm">{postLikes?.length || 0}</p>
       </div>
 
       <div className="flex gap-2">

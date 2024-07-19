@@ -1,9 +1,15 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   createPost,
   createUserAccount,
   deleteSavedPost,
   getCurrentUser,
+  getInfinitePosts,
   getRecentPosts,
   likePost,
   logIn,
@@ -11,7 +17,6 @@ import {
   savePost,
 } from "../lib/appwrite/api";
 import { INewPost, INewUser } from "../types";
-import { useCurrentUser } from "../context/AuthContext";
 import { QUERY_KEYS } from "../enums/queries.enums";
 
 export const useSignUpAccount = () => {
@@ -96,5 +101,21 @@ export const useGetCurrentUser = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_CURRENT_USER],
     queryFn: getCurrentUser,
+  });
+};
+
+export const useGetPosts = () => {
+  return useInfiniteQuery({
+    queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
+    queryFn: getInfinitePosts,
+    getNextPageParam: (lastPage: any) => {
+      if (lastPage?.documents.length === 0) {
+        return null;
+      }
+
+      // Use the $id of the last document as the cursor.
+      const lastId = lastPage.documents[lastPage.documents.length - 1].$id;
+      return lastId;
+    },
   });
 };

@@ -15,11 +15,10 @@ function Home() {
         <div className="max-w-screen-sm w-full mx-auto space-y-6 md:space-y-9">
           <div className="text-xl lg:text-2xl font-bold">Home Feed</div>
 
-
           {isPostsLoading ? (
             <Loader />
           ) : (
-            <ul className="w-full">
+            <ul className="w-full space-y-10">
               {posts?.documents.map((post) => (
                 <li key={post.$id}>
                   <PostCard post={post} />

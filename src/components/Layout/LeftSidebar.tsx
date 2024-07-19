@@ -20,7 +20,7 @@ function LeftSidebar() {
   };
 
   return (
-    <nav className="hidden justify-between w-[270px] min-h-screen sm:flex flex-col gap-2 px-6 py-10 bg-dark-2">
+    <nav className="hidden sticky top-0 justify-between w-[270px] h-screen sm:flex flex-col gap-2 px-6 py-10 bg-dark-2">
       <div className="flex flex-col gap-y-8">
         <Link to={"/"} className="text-3xl">
           Header
